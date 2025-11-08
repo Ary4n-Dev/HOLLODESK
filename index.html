@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>HoloDesk — Virtual Air Whiteboard</title>
+
+
+
+<style>
+:root{
+  --toolbar-h:76px;
+  --glass:rgba(255,255,255,0.06);
+  --shadow:0 6px 24px rgba(0,0,0,0.35);
+}
+html,body{
+  margin:0;height:100%;overflow:hidden;background:#000;color:#fff;
+  font-family:Inter,Segoe UI,system-ui;
+}
+#videoWrap{position:fixed;inset:0;z-index:0;overflow:hidden;}
+#cam{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scaleX(-1);
+  width:100vw;height:100vh;object-fit:cover;
+}
+.canvasLayer{position:fixed;inset:0;z-index:1;pointer-events:none;}
+#overlay{position:fixed;inset:0;z-index:2;background:rgba(255,255,255,0.85);}
+#drawCanvas{position:fixed;inset:0;z-index:3;pointer-events:none;}
+#pointerCanvas{position:fixed;inset:0;z-index:4;pointer-events:none;}
+
+#toolbar{
+  position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+  z-index:5;height:var(--toolbar-h);min-width:560px;max-width:96%;
+  padding:12px;display:flex;gap:12px;align-items:center;justify-content:space-between;
+  background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));
+  border-radius:14px;box-shadow:var(--shadow);
+  backdrop-filter:blur(8px) saturate(120%);
+  border:1px solid rgba(255,255,255,0.04);
+  transition:opacity .18s ease,transform .18s ease;
+}
+#toolbar.hidden{opacity:0;transform:translate(-50%,10px);pointer-events:none;}
+
+.pen-btn,.icon-btn{
+  width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:2px solid rgba(255,255,255,0.06);transition:transform .12s ease;
+}
+.pen-btn.active{transform:scale(1.05);box-shadow:0 6px 18px rgba(0,0,0,0.45);}
+.icon-btn{background:var(--glass);}
+select#bgSelect{
+  background:transparent;color:inherit;border:none;font-size:14px;padding:8px 10px;border-radius:8px;
+  outline:none;border:1px solid rgba(255,255,255,0.04);
+}
+</style>
+</head>
+<body>
+
+<div id="videoWrap"><video id="cam" autoplay playsinline></video></div>
+<canvas id="bgCanvas" class="canvasLayer"></canvas>
+<div id="overlay" class="canvasLayer"></div>
+<canvas id="drawCanvas"></canvas>
+<canvas id="pointerCanvas"></canvas>
+
+<div id="toolbar">
+  <div style="display:flex;gap:12px;align-items:center;">
+    <div class="pen-btn" id="pen-black" data-color="#0b0b0b" style="background:#000;"></div>
+    <div class="pen-btn" id="pen-blue" data-color="#0b5cff" style="background:#0b5cff;"></div>
+    <div class="pen-btn" id="pen-red" data-color="#ff3b3b" style="background:#ff3b3b;"></div>
+    <select id="bgSelect"><option value="solid">Solid</option>
+      <option value="ruled">Ruled</option><option value="cartesian">Cartesian</option></select>
+    <input id="bgColor" type="color" value="#ffffff" style="width:44px;height:44px;border-radius:10px;border:none;">
+  </div>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <div class="icon-btn" id="clearBtn">🧹</div>
+    <div class="icon-btn" id="saveBtn">📷</div>
+    <div class="icon-btn" id="pauseBtn">⏯</div>
+  </div>
+</div>
+</body>
+</html>
